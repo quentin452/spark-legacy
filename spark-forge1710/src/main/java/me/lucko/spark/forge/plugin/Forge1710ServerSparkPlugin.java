@@ -55,7 +55,7 @@ public class Forge1710ServerSparkPlugin extends Forge1710SparkPlugin {
     @Override
     public boolean hasPermission(ICommandSender sender, String permission) {
         if (sender instanceof EntityPlayer) {
-            return isOp((EntityPlayer) sender);
+            return isOp((EntityPlayer) sender) || !this.server.isDedicatedServer();
         } else {
             return true;
         }
