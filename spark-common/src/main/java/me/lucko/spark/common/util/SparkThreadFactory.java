@@ -18,34 +18,25 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.lucko.spark.sponge;
+package me.lucko.spark.common.util;
 
-import me.lucko.spark.common.tick.AbstractTickHook;
-import me.lucko.spark.common.tick.TickHook;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicInteger;
 
-import org.spongepowered.api.scheduler.Task;
+public class SparkThreadFactory implements ThreadFactory {
+    private static final AtomicInteger poolNumber = new AtomicInteger(1);
+    private final AtomicInteger threadNumber = new AtomicInteger(1);
+    private final String namePrefix;
 
-public class SpongeTickHook extends AbstractTickHook implements TickHook, Runnable {
-    private final SpongeSparkPlugin plugin;
-    private Task task;
-
-    public SpongeTickHook(SpongeSparkPlugin plugin) {
-        this.plugin = plugin;
+    public SparkThreadFactory() {
+        this.namePrefix = "spark-worker-pool-" +
+                poolNumber.getAndIncrement() +
+                "-thread-";
     }
 
-    @Override
-    public void run() {
-        onTick();
+    public Thread newThread(Runnable r) {
+        Thread t = new Thread(r, this.namePrefix + this.threadNumber.getAndIncrement());
+        t.setDaemon(true);
+        return t;
     }
-
-    @Override
-    public void start() {
-        this.task = Task.builder().intervalTicks(1).name("spark-ticker").execute(this).submit(this.plugin);
-    }
-
-    @Override
-    public void close() {
-        this.task.cancel();
-    }
-
 }

@@ -20,15 +20,15 @@
 
 package me.lucko.spark.sponge;
 
-import me.lucko.spark.common.platform.AbstractPlatformInfo;
+import me.lucko.spark.common.platform.PlatformInfo;
 
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Platform;
 
-public class SpongePlatformInfo extends AbstractPlatformInfo {
+public class Sponge7PlatformInfo implements PlatformInfo {
     private final Game game;
 
-    public SpongePlatformInfo(Game game) {
+    public Sponge7PlatformInfo(Game game) {
         this.game = game;
     }
 

@@ -18,36 +18,34 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.lucko.spark.forge;
+package me.lucko.spark.sponge;
 
-import me.lucko.spark.common.platform.AbstractPlatformInfo;
+import me.lucko.spark.common.tick.AbstractTickHook;
+import me.lucko.spark.common.tick.TickHook;
 
-import net.minecraftforge.common.ForgeVersion;
+import org.spongepowered.api.scheduler.Task;
 
-public class Forge1122PlatformInfo extends AbstractPlatformInfo {
-    private final Type type;
+public class Sponge7TickHook extends AbstractTickHook implements TickHook, Runnable {
+    private final Sponge7SparkPlugin plugin;
+    private Task task;
 
-    public Forge1122PlatformInfo(Type type) {
-        this.type = type;
+    public Sponge7TickHook(Sponge7SparkPlugin plugin) {
+        this.plugin = plugin;
     }
 
     @Override
-    public Type getType() {
-        return this.type;
+    public void run() {
+        onTick();
     }
 
     @Override
-    public String getName() {
-        return "Forge";
+    public void start() {
+        this.task = Task.builder().intervalTicks(1).name("spark-ticker").execute(this).submit(this.plugin);
     }
 
     @Override
-    public String getVersion() {
-        return ForgeVersion.getVersion();
+    public void close() {
+        this.task.cancel();
     }
 
-    @Override
-    public String getMinecraftVersion() {
-        return ForgeVersion.mcVersion;
-    }
 }
