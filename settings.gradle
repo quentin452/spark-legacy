@@ -24,6 +24,7 @@ if (JavaVersion.current() != JavaVersion.VERSION_1_8){
         'spark-sponge7',
         'spark-sponge8',
         'spark-forge',
+        'spark-forge1122',
         'spark-fabric',
         'spark-nukkit',
         'spark-waterdog',
