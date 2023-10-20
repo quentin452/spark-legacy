@@ -473,8 +473,10 @@ public class SparkPlatform {
                 .append(text("v" + getPlugin().getVersion(), GRAY))
                 .build()
         );
+
         for (Command command : commands) {
             String usage = "/" + getPlugin().getCommandName() + " " + command.primaryAlias();
+            sender.replyPrefixed(text().append(text(">", GOLD, BOLD)).append(space()).append(text().content(usage).color(GRAY).clickEvent(ClickEvent.suggestCommand(usage)).build()).build());
 
             if (command.allowSubCommand()) {
                 Map<String, List<Command.ArgumentInfo>> argumentsBySubCommand = command.arguments().stream()
@@ -482,29 +484,15 @@ public class SparkPlatform {
 
                 argumentsBySubCommand.forEach((subCommand, arguments) -> {
                     String subCommandUsage = usage + " " + subCommand;
-
-                    sender.reply(text()
-                            .append(text(">", GOLD, BOLD))
-                            .append(space())
-                            .append(text().content(subCommandUsage).color(GRAY).clickEvent(ClickEvent.suggestCommand(subCommandUsage)).build())
-                            .build()
-                    );
+                    sender.reply(text().append(text(">", GOLD, BOLD)).append(space()).append(text().content(subCommandUsage).color(GRAY).clickEvent(ClickEvent.suggestCommand(subCommandUsage)).build()).build());
 
                     for (Command.ArgumentInfo arg : arguments) {
-                        if (arg.argumentName().isEmpty()) {
-                            continue;
+                        if (!arg.argumentName().isEmpty()) {
+                            sender.reply(arg.toComponent("      "));
                         }
-                        sender.reply(arg.toComponent("      "));
                     }
                 });
             } else {
-                sender.reply(text()
-                        .append(text(">", GOLD, BOLD))
-                        .append(space())
-                        .append(text().content(usage).color(GRAY).clickEvent(ClickEvent.suggestCommand(usage)).build())
-                        .build()
-                );
-
                 for (Command.ArgumentInfo arg : command.arguments()) {
                     sender.reply(arg.toComponent("    "));
                 }
@@ -512,16 +500,6 @@ public class SparkPlatform {
         }
 
         sender.reply(Component.empty());
-        sender.replyPrefixed(text()
-                .append(text("For full usage information, please go to: "))
-                .append(text()
-                        .content("https://spark.lucko.me/docs/Command-Usage")
-                        .color(WHITE)
-                        .clickEvent(ClickEvent.openUrl("https://spark.lucko.me/docs/Command-Usage"))
-                        .build()
-                )
-                .build()
-        );
+        sender.replyPrefixed(text().append(text("For full usage information, please go to: ")).append(text().content("https://spark.lucko.me/docs/Command-Usage").color(WHITE).clickEvent(ClickEvent.openUrl("https://spark.lucko.me/docs/Command-Usage")).build()).build());
     }
-
 }
